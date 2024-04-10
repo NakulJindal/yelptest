@@ -1,8 +1,9 @@
 const express = require("express");
 const path = require("path");
 const methodOverride = require("method-override");
-const Campground = require("./models/campground");
+const ejsMate = require("ejs-mate");
 const mongoose = require("mongoose");
+const Campground = require("./models/campground");
 
 mongoose.connect("mongodb://localhost:27017/yelp-hotel");
 
@@ -14,6 +15,8 @@ db.once("open", () => {
 
 const app = express();
 const PORT = 3000;
+
+app.engine("ejs", ejsMate);
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));

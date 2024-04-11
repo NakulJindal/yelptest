@@ -5,6 +5,8 @@ const ejsMate = require("ejs-mate");
 const mongoose = require("mongoose");
 const Campground = require("./models/campground");
 const catchAsync = require("./utils/catchAsync");
+const ExpressError = require("./utils/ExpressError");
+const { campgroundValidate } = require("./middlewares/validationMiddlewares");
 
 mongoose.connect("mongodb://localhost:27017/yelp-hotel");
 
@@ -63,6 +65,7 @@ app.get(
 
 app.post(
   "/campgrounds",
+  campgroundValidate,
   catchAsync(async (req, res) => {
     const camp = req.body.campground;
 
@@ -74,6 +77,7 @@ app.post(
 
 app.put(
   "/campgrounds/:id",
+  campgroundValidate,
   catchAsync(async (req, res) => {
     const camp = req.body.campground;
     const id = req.params.id;
@@ -98,8 +102,15 @@ app.delete(
   })
 );
 
+app.all("*", (req, res, next) => {
+  next(new ExpressError("Page Not Found!!", 404));
+});
+
 app.use((err, req, res, next) => {
-  res.send("something went wrong!!");
+  if (!err.message) err.message = "Something Went Wrong!!";
+  if (!err.statusCode) err.statusCode = 500;
+
+  res.status(err.statusCode).render("error", { err });
 });
 
 app.listen(PORT, function (err) {

@@ -1,0 +1,24 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="row">
+  <div class="col-6 offset-3">
+    <div class="alert alert-danger" role="alert">
+      <h4 class="alert-heading"><%=err.message%></h4>
+    </div>
+    <div class="col-6 offset-2">
+      <script
+        src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+        type="module"
+      ></script>
+
+      <dotlottie-player
+        src="https://lottie.host/a4e985cb-1963-44db-9280-c659884c978b/4KdK5YdLic.json"
+        background="transparent"
+        speed="1"
+        style="width: 300px; height: 300px"
+        loop
+        autoplay
+      ></dotlottie-player>
+    </div>
+  </div>
+</div>

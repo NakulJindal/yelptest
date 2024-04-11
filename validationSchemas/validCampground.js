@@ -9,6 +9,7 @@ const validCampgroundSchema = zod.object({
     image: zod.string().url(),
     location: zod.string(),
     description: zod.string(),
+    reviews: zod.array(),
   }),
 });
 

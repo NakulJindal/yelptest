@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Review = require("./review");
+const User = require("./user");
 const Schema = mongoose.Schema;
 
 const CampgroundSchema = new Schema({
@@ -14,6 +15,10 @@ const CampgroundSchema = new Schema({
       ref: "Review",
     },
   ],
+  author: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  },
 });
 
 CampgroundSchema.post("findOneAndDelete", async (camp) => {

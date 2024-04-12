@@ -5,10 +5,11 @@ const Campground = require("../models/campground");
 const catchAsync = require("../utils/catchAsync");
 const {
   authenticateLogin,
+  isReviewer,
 } = require("../middlewares/authenticationMiddleware");
 const { reviewValidate } = require("../middlewares/validationMiddlewares");
 
-router.post("/", reviewValidate, async (req, res, next) => {
+router.post("/", authenticateLogin, reviewValidate, async (req, res, next) => {
   const id = req.params.id;
   const { reviews } = req.body;
   const campground = await Campground.findById(id);
@@ -16,7 +17,7 @@ router.post("/", reviewValidate, async (req, res, next) => {
     req.flash("error", "Campground not found!");
     return res.redirect("/campgrounds");
   }
-  const reviewer = req.user ? req.user.username : "anonymous";
+  const reviewer = req.user._id;
   const review = await Review.create({ ...reviews, reviewer });
   campground.reviews.push(review);
   await campground.save();
@@ -27,6 +28,7 @@ router.post("/", reviewValidate, async (req, res, next) => {
 router.delete(
   "/:reviewId",
   authenticateLogin,
+  isReviewer,
   catchAsync(async (req, res) => {
     const { id, reviewId } = req.params;
 

@@ -9,9 +9,14 @@ router.post("/", reviewValidate, async (req, res, next) => {
   const id = req.params.id;
   const { reviews } = req.body;
   const campground = await Campground.findById(id);
+  if (!campground) {
+    req.flash("error", "Campground not found!");
+    return res.redirect("/campgrounds");
+  }
   const review = await Review.create({ ...reviews });
   campground.reviews.push(review);
   await campground.save();
+  req.flash("success", "Review Added!");
   res.redirect(`/campgrounds/${id}`);
 });
 
@@ -28,10 +33,15 @@ router.delete(
     //   { ...campground },
     //   { new: true }
     // );
-    await Campground.findByIdAndUpdate(id, {
+    const campground = await Campground.findByIdAndUpdate(id, {
       $pull: { reviews: reviewId },
     });
+    if (!campground) {
+      req.flash("error", "Campground not found!");
+      return res.redirect("/campgrounds");
+    }
     await Review.findByIdAndDelete(reviewId);
+    req.flash("success", "Review Deleted!");
     res.redirect(`/campgrounds/${id}`);
   })
 );

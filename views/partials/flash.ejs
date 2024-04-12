@@ -1,0 +1,17 @@
+<% if(success && success.length) { %>
+<div
+  id="flash"
+  class="alert alert-success alert-dismissible fade show"
+  role="alert"
+>
+  <span><%= success %></span>
+</div>
+<% } %> <% if(error && error.length) { %>
+<div
+  id="flash"
+  class="alert alert-danger alert-dismissible fade show"
+  role="alert"
+>
+  <span><%= error %></span>
+</div>
+<% } %>

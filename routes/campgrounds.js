@@ -2,10 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Campground = require("../models/campground");
 const catchAsync = require("../utils/catchAsync");
-const {
-  campgroundValidate,
-  reviewValidate,
-} = require("../middlewares/validationMiddlewares");
+const { campgroundValidate } = require("../middlewares/validationMiddlewares");
 
 router.get(
   "/",
@@ -24,6 +21,10 @@ router.get(
   catchAsync(async (req, res) => {
     const id = req.params.id;
     const campground = await Campground.findById(id).populate("reviews");
+    if (!campground) {
+      req.flash("error", "Campground not found!");
+      return res.redirect("/campgrounds");
+    }
     res.render("campgrounds/show", { campground });
   })
 );
@@ -32,8 +33,11 @@ router.get(
   "/:id/edit",
   catchAsync(async (req, res) => {
     const id = req.params.id;
-    const camp = await Campground.find({ _id: id });
-    const campground = camp[0];
+    const campground = await Campground.findById(id);
+    if (!campground) {
+      req.flash("error", "Campground not found!");
+      return res.redirect("/campgrounds");
+    }
     res.render("campgrounds/edit", { campground });
   })
 );
@@ -43,9 +47,9 @@ router.post(
   campgroundValidate,
   catchAsync(async (req, res) => {
     const camp = req.body.campground;
-
     const campground = await Campground.create({ ...camp });
-    res.render("campgrounds/show", { campground });
+    req.flash("success", "Campground Created Successfully!");
+    res.redirect(`/campgrounds/${campground._id}`);
   })
 );
 
@@ -60,8 +64,8 @@ router.put(
       { ...camp },
       { new: true }
     );
-
-    res.render("campgrounds/show", { campground });
+    req.flash("success", "Campground Updated Successfully!");
+    res.redirect(`campgrounds/${id}`);
   })
 );
 
@@ -78,6 +82,7 @@ router.delete(
     // await Campground.findByIdAndDelete(id);
     // await Review.deleteMany({ _id: { $in: reviewIds } });
 
+    req.flash("success", "Campground Deleted Successfully!");
     res.redirect("/campgrounds");
   })
 );

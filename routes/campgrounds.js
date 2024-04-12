@@ -2,6 +2,9 @@ const express = require("express");
 const router = express.Router();
 const Campground = require("../models/campground");
 const catchAsync = require("../utils/catchAsync");
+const {
+  authenticateLogin,
+} = require("../middlewares/authenticationMiddleware");
 const { campgroundValidate } = require("../middlewares/validationMiddlewares");
 
 router.get(
@@ -12,7 +15,7 @@ router.get(
   })
 );
 
-router.get("/new", (req, res) => {
+router.get("/new", authenticateLogin, (req, res) => {
   res.render("campgrounds/new");
 });
 
@@ -31,6 +34,7 @@ router.get(
 
 router.get(
   "/:id/edit",
+  authenticateLogin,
   catchAsync(async (req, res) => {
     const id = req.params.id;
     const campground = await Campground.findById(id);
@@ -71,6 +75,7 @@ router.put(
 
 router.delete(
   "/:id",
+  authenticateLogin,
   catchAsync(async (req, res) => {
     const id = req.params.id;
     await Campground.findByIdAndDelete(id);

@@ -1,18 +1,24 @@
 const express = require("express");
-const router = express.Router();
+const multer = require("multer");
+const { storage } = require("../cloudinary");
 const campground = require("../controllers/campgrounds");
 const catchAsync = require("../utils/catchAsync");
+const { campgroundValidate } = require("../middlewares/validationMiddlewares");
 const {
   authenticateLogin,
   isAuthor,
+  storeReturnTo,
 } = require("../middlewares/authenticationMiddleware");
-const { campgroundValidate } = require("../middlewares/validationMiddlewares");
+
+const router = express.Router();
+const upload = multer({ storage });
 
 router
   .route("/")
   .get(catchAsync(campground.getAllCampgrounds))
   .post(
     authenticateLogin,
+    upload.array("image"),
     campgroundValidate,
     catchAsync(campground.addNewCampground)
   );
@@ -24,8 +30,9 @@ router
   .get(catchAsync(campground.getCampground))
   .put(
     authenticateLogin,
-    campgroundValidate,
     isAuthor,
+    upload.array("image"),
+    campgroundValidate,
     catchAsync(campground.updateCampground)
   )
   .delete(authenticateLogin, isAuthor, catchAsync(campground.deleteCampground));

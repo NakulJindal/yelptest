@@ -4,7 +4,7 @@ const Review = require("../models/review");
 const authenticateLogin = (req, res, next) => {
   if (!req.isAuthenticated()) {
     req.session.returnTo = req.originalUrl;
-    req.flash("error", "You're not Logged in, Please Log In Again!!");
+    req.flash("error", "You're not Logged in, Please Log In!!");
     return res.redirect("/register/login");
   }
   next();

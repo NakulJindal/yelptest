@@ -52,6 +52,10 @@ module.exports.addNewCampground = async (req, res) => {
       limit: 1,
     })
     .send();
+  if (geoData.body.features.length === 0) {
+    req.flash("error", "Please provide valid Location.");
+    return res.redirect("/campgrounds/new");
+  }
   const geometry = geoData.body.features[0].geometry;
   const campground = await Campground.create({
     ...camp,
@@ -72,6 +76,10 @@ module.exports.updateCampground = async (req, res) => {
       limit: 1,
     })
     .send();
+  if (geoData.body.features.length === 0) {
+    req.flash("error", "Please provide valid Location.");
+    return res.redirect(`/campgrounds/${id}/edit`);
+  }
   camp.geometry = geoData.body.features[0].geometry;
   const campground = await Campground.findOneAndUpdate(
     { _id: id },

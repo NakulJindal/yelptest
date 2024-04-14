@@ -2,19 +2,21 @@ if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
 
-const express = require("express");
 const path = require("path");
+const helmet = require("helmet");
+const express = require("express");
 const ejsMate = require("ejs-mate");
-const mongoose = require("mongoose");
-const session = require("express-session");
-const flash = require("connect-flash");
-const methodOverride = require("method-override");
 const passport = require("passport");
+const mongoose = require("mongoose");
+const flash = require("connect-flash");
+const session = require("express-session");
 const LocalStrategy = require("passport-local");
+const methodOverride = require("method-override");
+const mongoSanitize = require("express-mongo-sanitize");
 const User = require("./models/user");
-const campRouter = require("./routes/campgrounds");
-const reviewRouter = require("./routes/reviews");
 const userRouter = require("./routes/users");
+const reviewRouter = require("./routes/reviews");
+const campRouter = require("./routes/campgrounds");
 const ExpressError = require("./utils/ExpressError");
 
 mongoose.connect("mongodb://localhost:27017/yelp-hotel");
@@ -28,11 +30,13 @@ db.once("open", () => {
 const app = express();
 const PORT = 3000;
 const sessionConfig = {
+  name: "session",
   secret: "thisismysecret",
   resave: false,
   saveUninitialized: true,
   cookie: {
     httpOnly: true,
+    // secure: true,
     expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
     maxAge: 1000 * 60 * 60 * 24 * 7,
   },
@@ -48,8 +52,14 @@ app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(session(sessionConfig));
 app.use(flash());
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(
+  mongoSanitize({
+    replaceWith: "_",
+  })
+);
 
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());

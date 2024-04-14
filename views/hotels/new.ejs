@@ -1,10 +1,10 @@
 <% layout('layouts/boilerplate') %>
 
 <div class="row">
-  <h1 class="text-center">New Campground</h1>
+  <h1 class="text-center">New Hotel</h1>
   <div class="col-md-6 offset-md-3">
     <form
-      action="/campgrounds"
+      action="/hotels"
       method="post"
       class="validated-form"
       novalidate
@@ -16,7 +16,7 @@
           class="form-control"
           type="text"
           id="title"
-          name="campground[title]"
+          name="hotel[title]"
           required
         />
       </div>
@@ -26,12 +26,12 @@
           class="form-control"
           type="text"
           id="location"
-          name="campground[location]"
+          name="hotel[location]"
           required
         />
       </div>
       <div class="mb-3">
-        <label class="form-label" for="price">Campground Price</label>
+        <label class="form-label" for="price">Hotel Price</label>
         <div class="input-group">
           <span class="input-group-text" id="price-label">$</span>
           <input
@@ -41,7 +41,7 @@
             placeholder="0.00"
             aria-label="price"
             aria-describedby="price-label"
-            name="campground[price]"
+            name="hotel[price]"
             required
           />
         </div>
@@ -52,7 +52,7 @@
           class="form-control"
           type="text"
           id="description"
-          name="campground[description]"
+          name="hotel[description]"
           required
         ></textarea>
       </div>
@@ -70,9 +70,9 @@
         </div>
       </div>
       <div class="mb-3">
-        <button class="btn btn-success">Add Campground</button>
+        <button class="btn btn-success">Add Hotel</button>
       </div>
     </form>
-    <a href="/campgrounds">All Campgrounds</a>
+    <a href="/hotels">All Hotels</a>
   </div>
 </div>

@@ -8,8 +8,8 @@ function escapeHTML(value) {
   });
 }
 
-const validCampgroundSchema = zod.object({
-  campground: zod.object({
+const validHotelSchema = zod.object({
+  hotel: zod.object({
     title: zod.string().transform((value) => escapeHTML(value)),
     price: zod.string().refine((price) => parseFloat(price) >= 0, {
       message: "Price must be greater than or equal to zero",
@@ -21,4 +21,4 @@ const validCampgroundSchema = zod.object({
   deleteImages: zod.array(zod.string()).optional(),
 });
 
-module.exports = validCampgroundSchema;
+module.exports = validHotelSchema;

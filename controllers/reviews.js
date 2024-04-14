@@ -1,41 +1,41 @@
 const Review = require("../models/review");
-const Campground = require("../models/campground");
+const Hotel = require("../models/hotel");
 
 module.exports.addNewReview = async (req, res, next) => {
   const id = req.params.id;
   const { reviews } = req.body;
-  const campground = await Campground.findById(id);
-  if (!campground) {
-    req.flash("error", "Campground not found!");
-    return res.redirect("/campgrounds");
+  const hotel = await Hotel.findById(id);
+  if (!hotel) {
+    req.flash("error", "Hotel not found!");
+    return res.redirect("/hotels");
   }
   const reviewer = req.user._id;
   const review = await Review.create({ ...reviews, reviewer });
-  campground.reviews.push(review);
-  await campground.save();
+  hotel.reviews.push(review);
+  await hotel.save();
   req.flash("success", "Review Added!");
-  res.redirect(`/campgrounds/${id}`);
+  res.redirect(`/hotels/${id}`);
 };
 
 module.exports.deleteReview = async (req, res) => {
   const { id, reviewId } = req.params;
 
-  // const campground = await Campground.findById(campId);
-  // const index = campground.reviews.indexOf(reviewId);
-  // campground.reviews.splice(index, 1);
-  // Campground.findOneAndUpdate(
-  //   { _id: campId },
-  //   { ...campground },
+  // const hotel = await Hotel.findById(hotelId);
+  // const index = hotel.reviews.indexOf(reviewId);
+  // hotel.reviews.splice(index, 1);
+  // Hotel.findOneAndUpdate(
+  //   { _id: hotelId },
+  //   { ...hotel },
   //   { new: true }
   // );
-  const campground = await Campground.findByIdAndUpdate(id, {
+  const hotel = await Hotel.findByIdAndUpdate(id, {
     $pull: { reviews: reviewId },
   });
-  if (!campground) {
-    req.flash("error", "Campground not found!");
-    return res.redirect("/campgrounds");
+  if (!hotel) {
+    req.flash("error", "Hotel not found!");
+    return res.redirect("/hotels");
   }
   await Review.findByIdAndDelete(reviewId);
   req.flash("success", "Review Deleted!");
-  res.redirect(`/campgrounds/${id}`);
+  res.redirect(`/hotels/${id}`);
 };

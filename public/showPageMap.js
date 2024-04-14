@@ -3,17 +3,17 @@ console.log("maptoken=" + mapToken);
 const map = new mapboxgl.Map({
   container: "map",
   style: "mapbox://styles/mapbox/streets-v12",
-  center: campground.geometry.coordinates,
+  center: hotel.geometry.coordinates,
   zoom: 11,
 });
 
 map.addControl(new mapboxgl.NavigationControl());
 
 new mapboxgl.Marker()
-  .setLngLat(campground.geometry.coordinates)
+  .setLngLat(hotel.geometry.coordinates)
   .setPopup(
     new mapboxgl.Popup({ offset: 25 }).setHTML(
-      `<h3>${campground.title}</h3><p>${campground.location}</p>`
+      `<h3>${hotel.title}</h3><p>${hotel.location}</p>`
     )
   )
   .addTo(map);

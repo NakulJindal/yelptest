@@ -1,10 +1,10 @@
 <% layout('layouts/boilerplate') %>
 
 <div class="row">
-  <h1 class="text-center">Edit Campground</h1>
+  <h1 class="text-center">Edit Hotel</h1>
   <div class="col-md-6 offset-md-3">
     <form
-      action="/campgrounds/<%= campground._id %>?_method=PUT"
+      action="/hotels/<%= hotel._id %>?_method=PUT"
       method="post"
       class="validated-form"
       novalidate
@@ -16,8 +16,8 @@
           class="form-control"
           type="text"
           id="title"
-          value="<%= campground.title %>"
-          name="campground[title]"
+          value="<%= hotel.title %>"
+          name="hotel[title]"
           required
         />
       </div>
@@ -27,13 +27,13 @@
           class="form-control"
           type="text"
           id="location"
-          value="<%= campground.location %>"
-          name="campground[location]"
+          value="<%= hotel.location %>"
+          name="hotel[location]"
           required
         />
       </div>
       <div class="mb-3">
-        <label class="form-label" for="price">Campground Price</label>
+        <label class="form-label" for="price">Hotel Price</label>
         <div class="input-group">
           <span class="input-group-text" id="price-label">$</span>
           <input
@@ -43,8 +43,8 @@
             placeholder="0.00"
             aria-label="price"
             aria-describedby="price-label"
-            name="campground[price]"
-            value="<%=campground.price %>"
+            name="hotel[price]"
+            value="<%=hotel.price %>"
             required
           />
         </div>
@@ -55,10 +55,10 @@
           class="form-control"
           type="text"
           id="description"
-          name="campground[description]"
+          name="hotel[description]"
           required
         >
-          <%= campground.description%>
+          <%= hotel.description%>
         </textarea>
       </div>
       <div class="mb-3">
@@ -75,7 +75,7 @@
         </div>
       </div>
       <div class="mb-3">
-        <% campground.images.forEach(function(img, i) { %>
+        <% hotel.images.forEach(function(img, i) { %>
         <img src="<%=img.thumbnail %>" class="img-thumbnail" alt="" />
         <div class="form-check-inline">
           <input
@@ -89,9 +89,9 @@
         <% })%>
       </div>
       <div class="mb-3">
-        <button class="btn btn-info">Update Campground</button>
+        <button class="btn btn-info">Update Hotel</button>
       </div>
     </form>
-    <a href="/campgrounds">Back To Campground</a>
+    <a href="/hotels">Back To Hotel</a>
   </div>
 </div>

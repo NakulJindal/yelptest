@@ -1,9 +1,9 @@
 const express = require("express");
 const multer = require("multer");
 const { storage } = require("../cloudinary");
-const campground = require("../controllers/campgrounds");
+const hotel = require("../controllers/hotels");
 const catchAsync = require("../utils/catchAsync");
-const { campgroundValidate } = require("../middlewares/validationMiddlewares");
+const { hotelValidate } = require("../middlewares/validationMiddlewares");
 const {
   authenticateLogin,
   isAuthor,
@@ -15,33 +15,33 @@ const upload = multer({ storage });
 
 router
   .route("/")
-  .get(catchAsync(campground.getAllCampgrounds))
+  .get(catchAsync(hotel.getAllHotels))
   .post(
     authenticateLogin,
     upload.array("image"),
-    campgroundValidate,
-    catchAsync(campground.addNewCampground)
+    hotelValidate,
+    catchAsync(hotel.addNewHotel)
   );
 
-router.get("/new", authenticateLogin, campground.renderNewCampgroundForm);
+router.get("/new", authenticateLogin, hotel.renderNewHotelForm);
 
 router
   .route("/:id")
-  .get(catchAsync(campground.getCampground))
+  .get(catchAsync(hotel.getHotel))
   .put(
     authenticateLogin,
     isAuthor,
     upload.array("image"),
-    campgroundValidate,
-    catchAsync(campground.updateCampground)
+    hotelValidate,
+    catchAsync(hotel.updateHotel)
   )
-  .delete(authenticateLogin, isAuthor, catchAsync(campground.deleteCampground));
+  .delete(authenticateLogin, isAuthor, catchAsync(hotel.deleteHotel));
 
 router.get(
   "/:id/edit",
   authenticateLogin,
   isAuthor,
-  catchAsync(campground.renderEditCampgroundForm)
+  catchAsync(hotel.renderEditHotelForm)
 );
 
 module.exports = router;

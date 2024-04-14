@@ -16,7 +16,7 @@ const mongoSanitize = require("express-mongo-sanitize");
 const User = require("./models/user");
 const userRouter = require("./routes/users");
 const reviewRouter = require("./routes/reviews");
-const campRouter = require("./routes/campgrounds");
+const hotelRouter = require("./routes/hotels");
 const ExpressError = require("./utils/ExpressError");
 
 mongoose.connect("mongodb://localhost:27017/yelp-hotel");
@@ -74,8 +74,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/campgrounds", campRouter);
-app.use("/campgrounds/:id/reviews", reviewRouter);
+app.use("/hotels", hotelRouter);
+app.use("/hotels/:id/reviews", reviewRouter);
 app.use("/register", userRouter);
 
 app.get("/", (req, res) => {

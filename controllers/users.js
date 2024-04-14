@@ -23,7 +23,7 @@ module.exports.signUp = async (req, res, next) => {
     const { username, email, password } = req.body;
     const user = new User({ username, email });
     const registeredUser = await User.register(user, password);
-    const redirectUrl = res.locals.returnTo || "/campgrounds";
+    const redirectUrl = res.locals.returnTo || "/hotels";
     req.login(registeredUser, (err) => {
       if (err) return next(err);
       req.flash("success", "Welcome to Yelp!");
@@ -36,7 +36,7 @@ module.exports.signUp = async (req, res, next) => {
 };
 
 module.exports.logIn = (req, res, next) => {
-  const redirectUrl = res.locals.returnTo || "/campgrounds";
+  const redirectUrl = res.locals.returnTo || "/hotels";
   req.flash("success", "Welcome Back!");
   res.redirect(redirectUrl);
 };

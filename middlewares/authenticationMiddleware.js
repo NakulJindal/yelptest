@@ -1,4 +1,4 @@
-const Campground = require("../models/campground");
+const Hotel = require("../models/hotel");
 const Review = require("../models/review");
 
 const authenticateLogin = (req, res, next) => {
@@ -19,10 +19,10 @@ const storeReturnTo = (req, res, next) => {
 
 const isAuthor = async (req, res, next) => {
   const id = req.params.id;
-  const campground = await Campground.findById(id);
-  if (!campground.author.equals(req.user._id)) {
-    req.flash("error", "Only Authors can Edit there Campgrounds!");
-    return res.redirect(`/campgrounds/${id}`);
+  const hotel = await Hotel.findById(id);
+  if (!hotel.author.equals(req.user._id)) {
+    req.flash("error", "Only Authors can Edit there Hotels!");
+    return res.redirect(`/hotels/${id}`);
   }
   next();
 };
@@ -32,7 +32,7 @@ const isReviewer = async (req, res, next) => {
   const review = await Review.findById(reviewId);
   if (!review.reviewer.equals(req.user._id)) {
     req.flash("error", "Only Authors can Delete there Review!");
-    return res.redirect(`/campgrounds/${id}`);
+    return res.redirect(`/hotels/${id}`);
   }
   next();
 };

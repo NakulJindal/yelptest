@@ -3,13 +3,13 @@
 
 <div class="row">
   <div class="col-6">
-    <div id="campgroundCarousel" class="carousel slide" data-bs-ride="carousel">
-      <% if(campground.images.length > 1) { %>
+    <div id="hotelCarousel" class="carousel slide" data-bs-ride="carousel">
+      <% if(hotel.images.length > 1) { %>
       <div class="carousel-indicators">
-        <% campground.images.forEach((img, i) => { %>
+        <% hotel.images.forEach((img, i) => { %>
         <button
           type="button"
-          data-bs-target="#campgroundCarousel"
+          data-bs-target="#hotelCarousel"
           data-bs-slide-to="<%= i %>"
           class="<%= i === 0 ? 'active' : '' %>"
           aria-current="true"
@@ -19,7 +19,7 @@
       </div>
       <% } %>
       <div class="carousel-inner">
-        <% if(campground.images.length == 0) { %>
+        <% if(hotel.images.length == 0) { %>
         <div class="carousel-item active">
           <img
             src="https://archive.org/download/no-photo-available/no-photo-available.png"
@@ -27,17 +27,17 @@
             alt=""
           />
         </div>
-        <% } else{ campground.images.forEach((img, i) => { %>
+        <% } else{ hotel.images.forEach((img, i) => { %>
         <div class="carousel-item <%= i === 0 ? 'active' : '' %>">
           <img src="<%= img.url %>" class="d-block w-100" alt="" />
         </div>
         <% })} %>
       </div>
-      <% if(campground.images.length > 1) { %>
+      <% if(hotel.images.length > 1) { %>
       <button
         class="carousel-control-prev"
         type="button"
-        data-bs-target="#campgroundCarousel"
+        data-bs-target="#hotelCarousel"
         data-bs-slide="prev"
       >
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -46,7 +46,7 @@
       <button
         class="carousel-control-next"
         type="button"
-        data-bs-target="#campgroundCarousel"
+        data-bs-target="#hotelCarousel"
         data-bs-slide="next"
       >
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
@@ -56,26 +56,24 @@
     </div>
     <div class="card mb-3">
       <div class="card-body">
-        <h5 class="card-title"><%= campground.title%></h5>
-        <p class="card-text"><%= campground.description%></p>
+        <h5 class="card-title"><%= hotel.title%></h5>
+        <p class="card-text"><%= hotel.description%></p>
       </div>
       <ul class="list-group list-group-flush">
-        <li class="list-group-item text-muted"><%= campground.location%></li>
-        <li class="list-group-item">$<%= campground.price%>/night</li>
+        <li class="list-group-item text-muted"><%= hotel.location%></li>
+        <li class="list-group-item">$<%= hotel.price%>/night</li>
         <li class="list-group-item">
-          Added By: <i><%= campground.author.username%></i>
+          <!-- Added By: <i><%= hotel.author.username%></i> -->
         </li>
       </ul>
-      <% if(currentUser && campground.author.equals(currentUser._id)) {%>
+      <% if(currentUser && hotel.author.equals(currentUser._id)) {%>
       <div class="card-body">
-        <a
-          class="card-link btn btn-info"
-          href="/campgrounds/<%=campground._id%>/edit"
+        <a class="card-link btn btn-info" href="/hotels/<%=hotel._id%>/edit"
           >Edit</a
         >
         <form
           class="d-inline"
-          action="/campgrounds/<%=campground._id%>?_method=DELETE"
+          action="/hotels/<%=hotel._id%>?_method=DELETE"
           method="POST"
         >
           <button class="btn btn-danger">Delete</button>
@@ -90,7 +88,7 @@
     <% if(currentUser){ %>
     <h2>Leave a Review</h2>
     <form
-      action="/campgrounds/<%=campground._id%>/reviews"
+      action="/hotels/<%=hotel._id%>/reviews"
       method="POST"
       class="mb-3 validated-form"
       novalidate
@@ -130,7 +128,7 @@
       </div>
       <button class="btn btn-success">Submit</button>
     </form>
-    <% } %> <% for(let review of campground.reviews) { %>
+    <% } %> <% for(let review of hotel.reviews) { %>
     <div class="card mb-3">
       <div class="card-body">
         <div>
@@ -141,7 +139,7 @@
           <p class="card-text"><%= review.comment %></p>
           <% if(currentUser && review.reviewer.equals(currentUser._id)) {%>
           <form
-            action="/campgrounds/<%=campground._id%>/reviews/<%=review._id%>?_method=DELETE"
+            action="/hotels/<%=hotel._id%>/reviews/<%=review._id%>?_method=DELETE"
             method="POST"
           >
             <button class="btn btn-sm btn-danger">Delete</button>
@@ -156,7 +154,7 @@
 
 <script>
   const mapToken = "<%-process.env.MAPBOX_TOKEN%>";
-  const campground = <%-JSON.stringify(campground) %>;
+  const hotel = <%-JSON.stringify(hotel) %>;
   console.log(mapToken);
 </script>
 <script src="/showPageMap.js"></script>

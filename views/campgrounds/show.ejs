@@ -19,11 +19,19 @@
       </div>
       <% } %>
       <div class="carousel-inner">
-        <% campground.images.forEach((img, i) => { %>
+        <% if(campground.images.length == 0) { %>
+        <div class="carousel-item active">
+          <img
+            src="https://archive.org/download/no-photo-available/no-photo-available.png"
+            class="d-block w-100"
+            alt=""
+          />
+        </div>
+        <% } else{ campground.images.forEach((img, i) => { %>
         <div class="carousel-item <%= i === 0 ? 'active' : '' %>">
           <img src="<%= img.url %>" class="d-block w-100" alt="" />
         </div>
-        <% }) %>
+        <% })} %>
       </div>
       <% if(campground.images.length > 1) { %>
       <button
@@ -78,6 +86,7 @@
     </div>
   </div>
   <div class="col-6">
+    <div id="map" style="width: 100%; height: 300px"></div>
     <% if(currentUser){ %>
     <h2>Leave a Review</h2>
     <form
@@ -144,3 +153,10 @@
     </div>
   </div>
 </div>
+
+<script>
+  const mapToken = "<%-process.env.MAPBOX_TOKEN%>";
+  const campground = <%-JSON.stringify(campground) %>;
+  console.log(mapToken);
+</script>
+<script src="/showPageMap.js"></script>

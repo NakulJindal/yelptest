@@ -8,7 +8,7 @@
       <img
         class="img-fluid"
         alt="campground-image"
-        src="<%=campground.images[0].url%>"
+        src="<%=campground.images.length>0?campground.images[0].url:'https://archive.org/download/no-photo-available/no-photo-available.png'%>"
       />
     </div>
     <div class="col-md-8">

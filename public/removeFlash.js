@@ -2,4 +2,4 @@ const div = document.getElementById("flash");
 function removeDiv() {
   div.remove();
 }
-setTimeout(removeDiv, 1000);
+setTimeout(removeDiv, 2000);

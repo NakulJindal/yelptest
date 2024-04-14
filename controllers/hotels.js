@@ -5,8 +5,22 @@ const geocoder = mbxGeocoding({ accessToken: mapBoxToken });
 const { cloudinary } = require("../cloudinary");
 
 module.exports.getAllHotels = async (req, res) => {
-  const hotels = await Hotel.find({}).populate("popupText");
-  res.render("hotels/index", { hotels });
+  const currentPage = parseInt(req.query.page) || 1;
+  const allHotels = await Hotel.find({}).populate("popupText");
+  const startIndex = (currentPage - 1) * 10;
+  const endIndex = startIndex + 10;
+  const hotels = allHotels.slice(startIndex, endIndex);
+  const totalPages = Math.ceil(allHotels.length / 10);
+  const maxPagesToShow = 5;
+  const startPage = Math.max(currentPage - Math.floor(maxPagesToShow / 2), 1);
+  const endPage = Math.min(startPage + maxPagesToShow - 1, totalPages);
+  res.render("hotels/index", {
+    hotels,
+    currentPage,
+    totalPages,
+    startPage,
+    endPage,
+  });
 };
 
 module.exports.renderNewHotelForm = (req, res) => {

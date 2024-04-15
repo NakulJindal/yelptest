@@ -3,7 +3,7 @@
 <div id="cluster-map"></div>
 <div class="container">
   <h1>Hotels</h1>
-  <div class="container mt-4 mb-3">
+  <div class="container mt-4 mb-4">
     <h3>Search</h3>
     <div class="input-group mb-3">
       <input
@@ -17,7 +17,9 @@
       </button>
     </div>
     <div id="searchResults"></div>
-    <button class="btn btn-secondary" id="backButton">Back</button>
+    <button class="btn btn-secondary" id="backButton" style="display: none">
+      Back
+    </button>
   </div>
   <div id="hotelContainer">
     <% for (let hotel of hotels){%>
@@ -95,6 +97,7 @@
 
   function showHotelContainer() {
     document.getElementById("hotelContainer").style.display = "block";
+    document.getElementById("backButton").style.display = "none";
   }
 
   function clearSearchResults() {
@@ -103,6 +106,7 @@
 
   function hideHotelContainer() {
     document.getElementById("hotelContainer").style.display = "none";
+    document.getElementById("backButton").style.display = "block";
   }
 
   function searchHotels(inputValue) {

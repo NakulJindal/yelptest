@@ -10,6 +10,7 @@ const passport = require("passport");
 const mongoose = require("mongoose");
 const flash = require("connect-flash");
 const session = require("express-session");
+const MongoStore = require("connect-mongo");
 const LocalStrategy = require("passport-local");
 const methodOverride = require("method-override");
 const mongoSanitize = require("express-mongo-sanitize");
@@ -19,7 +20,10 @@ const reviewRouter = require("./routes/reviews");
 const hotelRouter = require("./routes/hotels");
 const ExpressError = require("./utils/ExpressError");
 
-mongoose.connect("mongodb://localhost:27017/yelp-hotel");
+const dbUrl = process.env.MONGO_URL || "mongodb://localhost:27017/yelp-hotel";
+const secret = process.env.SECRET || "thisshouldbeabettersecret!";
+
+mongoose.connect(dbUrl);
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
@@ -27,11 +31,23 @@ db.once("open", () => {
   console.log("DB connected");
 });
 
+const store = MongoStore.create({
+  mongoUrl: dbUrl,
+  touchAfter: 24 * 60 * 60,
+  crypto: {
+    secret,
+  },
+});
+
+store.on("error", function (e) {
+  console.log("SESSION STORE ERROR", e);
+});
+
 const app = express();
 const PORT = 3000;
 const sessionConfig = {
   name: "session",
-  secret: "thisismysecret",
+  secret,
   resave: false,
   saveUninitialized: true,
   cookie: {

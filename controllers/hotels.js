@@ -15,11 +15,12 @@ module.exports.getAllHotels = async (req, res) => {
   const startPage = Math.max(currentPage - Math.floor(maxPagesToShow / 2), 1);
   const endPage = Math.min(startPage + maxPagesToShow - 1, totalPages);
   res.render("hotels/index", {
-    hotels,
-    currentPage,
-    totalPages,
-    startPage,
-    endPage,
+    allHotels: allHotels, // or simply allHotels if key and value have same name
+    hotels: hotels,
+    currentPage: currentPage,
+    totalPages: totalPages,
+    startPage: startPage,
+    endPage: endPage,
   });
 };
 

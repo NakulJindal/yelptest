@@ -1,103 +1,155 @@
-<!-- <% layout('layouts/boilerplate') %>
-
-<div id="cluster-map"></div>
-<div class="container">
-  <h1>All Hotels:</h1>
-  <% for (let hotel of hotels){%>
-  <div class="card mb-3">
-    <div class="row">
-      <div class="col-md-4">
-        <img
-          class="img-fluid"
-          alt="hotel-image"
-          src="<%=hotel.images.length>0?hotel.images[0].url:'https://archive.org/download/no-photo-available/no-photo-available.png'%>"
-        />
-      </div>
-      <div class="col-md-8">
-        <div class="card-body">
-          <h5 class="card-title"><%= hotel.title %></h5>
-          <p class="card-text"><%= hotel.description %></p>
-          <p class="card-text">
-            <small class="text-muted"><%= hotel.location%></small>
-          </p>
-          <a class="btn btn-primary" href="/hotels/<%=hotel._id%>">
-            View <%=hotel.title%>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-  <% }%>
-</div>
-<script>
-  const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
-  const hotels = { features: <%- JSON.stringify(hotels) %>}
-</script>
-
-<script src="/clusterMap.js"></script> -->
-
 <% layout('layouts/boilerplate') %>
 
 <div id="cluster-map"></div>
 <div class="container">
-  <h1>All Hotels:</h1>
-  <% for (let hotel of hotels){%>
-  <div class="card mb-3">
-    <div class="row">
-      <div class="col-md-4">
-        <img
-          class="img-fluid"
-          alt="hotel-image"
-          src="<%=hotel.images.length > 0 ? hotel.images[0].url : 'https://archive.org/download/no-photo-available/no-photo-available.png'%>"
-        />
-      </div>
-      <div class="col-md-8">
-        <div class="card-body">
-          <h5 class="card-title"><%= hotel.title %></h5>
-          <p class="card-text"><%= hotel.description %></p>
-          <p class="card-text">
-            <small class="text-muted"><%= hotel.location %></small>
-          </p>
-          <a class="btn btn-primary" href="/hotels/<%=hotel._id%>">
-            View <%= hotel.title %>
-          </a>
+  <h1>Hotels</h1>
+  <div class="container mt-4 mb-3">
+    <h3>Search</h3>
+    <div class="input-group mb-3">
+      <input
+        type="text"
+        id="searchInput"
+        class="form-control"
+        placeholder="Search by Hotel Name/Location"
+      />
+      <button class="btn btn-primary" type="button" id="searchButton">
+        Search
+      </button>
+    </div>
+    <div id="searchResults"></div>
+    <button class="btn btn-secondary" id="backButton">Back</button>
+  </div>
+  <div id="hotelContainer">
+    <% for (let hotel of hotels){%>
+    <div class="card mb-3">
+      <div class="row">
+        <div class="col-md-4">
+          <img
+            class="img-fluid"
+            alt="hotel-image"
+            src="<%=hotel.images.length > 0 ? hotel.images[0].url : 'https://archive.org/download/no-photo-available/no-photo-available.png'%>"
+          />
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <h5 class="card-title"><%= hotel.title %></h5>
+            <p class="card-text"><%= hotel.description %></p>
+            <p class="card-text">
+              <small class="text-muted"><%= hotel.location %></small>
+            </p>
+            <a class="btn btn-primary" href="/hotels/<%=hotel._id%>">
+              View <%= hotel.title %>
+            </a>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <% }%>
+    <% }%>
 
-  <!-- Pagination -->
-  <nav aria-label="Page navigation">
-    <ul class="pagination justify-content-center">
-      <% if (currentPage > 1) { %>
-      <li class="page-item">
-        <a
-          class="page-link"
-          href="?page=<%= currentPage - 1 %>"
-          aria-label="Previous"
-        >
-          <span aria-hidden="true">&laquo;</span>
-        </a>
-      </li>
-      <% } %> <% for (let i =startPage; i <= endPage; i++) { %>
-      <li class="page-item <%= i === currentPage ? 'active' : '' %>">
-        <a class="page-link" href="?page=<%= i %>"><%= i %></a>
-      </li>
-      <% } %> <% if (currentPage < totalPages) { %>
-      <li class="page-item">
-        <a
-          class="page-link"
-          href="?page=<%= currentPage + 1 %>"
-          aria-label="Next"
-        >
-          <span aria-hidden="true">&raquo;</span>
-        </a>
-      </li>
-      <% } %>
-    </ul>
-  </nav>
+    <!-- Pagination -->
+    <nav aria-label="Page navigation">
+      <ul class="pagination justify-content-center">
+        <% if (currentPage > 1) { %>
+        <li class="page-item">
+          <a
+            class="page-link"
+            href="?page=<%= currentPage - 1 %>"
+            aria-label="Previous"
+          >
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        <% } %> <% for (let i =startPage; i <= endPage; i++) { %>
+        <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+          <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+        </li>
+        <% } %> <% if (currentPage < totalPages) { %>
+        <li class="page-item">
+          <a
+            class="page-link"
+            href="?page=<%= currentPage + 1 %>"
+            aria-label="Next"
+          >
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+        <% } %>
+      </ul>
+    </nav>
+  </div>
 </div>
+
+<script>
+  const allHotels = { features: <%- JSON.stringify(allHotels) %> };
+  document
+    .getElementById("searchButton")
+    .addEventListener("click", function () {
+      hideHotelContainer();
+      searchHotels(document.getElementById("searchInput").value.toLowerCase());
+    });
+
+  document.getElementById("backButton").addEventListener("click", function () {
+    showHotelContainer();
+    clearSearchResults();
+  });
+
+  function showHotelContainer() {
+    document.getElementById("hotelContainer").style.display = "block";
+  }
+
+  function clearSearchResults() {
+    document.getElementById("searchResults").innerHTML = "";
+  }
+
+  function hideHotelContainer() {
+    document.getElementById("hotelContainer").style.display = "none";
+  }
+
+  function searchHotels(inputValue) {
+    const searchResults = document.getElementById("searchResults");
+    searchResults.innerHTML = "";
+    let count=1;
+    for (let hotel of allHotels.features) {
+      if(count>10) break;
+      if (
+        hotel.title.toLowerCase().includes(inputValue) ||
+        hotel.location.toLowerCase().includes(inputValue)
+      ) {
+        const div = document.createElement("div");
+        div.classList.add("card", "mb-3");
+        div.innerHTML = `
+            <div class="row">
+              <div class="col-md-4">
+                <img
+                  class="img-fluid"
+                  alt="hotel-image"
+                  src="${
+                    hotel.images.length > 0
+                      ? hotel.images[0].url
+                      : "https://archive.org/download/no-photo-available/no-photo-available.png"
+                  }"
+                />
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h5 class="card-title">${hotel.title}</h5>
+                  <p class="card-text">${hotel.description}</p>
+                  <p class="card-text">
+                    <small class="text-muted">${hotel.location}</small>
+                  </p>
+                  <a class="btn btn-primary" href="/hotels/${hotel._id}">
+                    View ${hotel.title}
+                  </a>
+                </div>
+              </div>
+            </div>
+            `;
+        searchResults.appendChild(div);
+        count++;
+      }
+    }
+  }
+</script>
 
 <script>
   const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
